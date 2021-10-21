@@ -13,11 +13,11 @@ import matplotlib.pyplot as plt
 
 
 # Parameters
-sizes = [512, 4096]  # np.logspace(9, 13, 5, base=2).astype(np.int32)
+sizes = [512, 4096, 8192]
 bins_per_octave = 36
 
 print('Testing TFST...')
-file_name = 'tempest_3rd'
+file_name = 'la'
 file_path = Path('.') / Path(file_name + '.wav')
 device = 'cuda:0'
 
@@ -31,7 +31,8 @@ signal_tensor = torch.tensor(signal, device=device)
 print('Time to device: %.3f seconds' % (time.time() - start))
 
 start = time.time()
-tfst_layer = TFST(sizes=sizes, bins_per_octave=bins_per_octave, fs=fs)
+tfst_layer = TFST(sizes=sizes, bins_per_octave=bins_per_octave, fs=fs,
+                  window=('gaussian', 80))
 print('Time to create layer: %.3f seconds' % (time.time() - start))
 
 start = time.time()
@@ -51,7 +52,7 @@ t_1 = 10.
 n_0 = int(t_0 / tfst_layer.time_resolution)
 n_1 = int(t_1 / tfst_layer.time_resolution)
 
-v_max = -20
+v_max = 0
 v_min = -100
 
 fig = plt.figure()
